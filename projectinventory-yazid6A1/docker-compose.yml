@@ -1,0 +1,141 @@
+services:
+  traefik:
+    image: traefik:v3
+    command:
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.endpoint=unix:///var/run/docker.sock
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    environment:
+      DOCKER_API_VERSION: "1.44"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - inventory
+
+  pencatatan:
+    build: .
+    depends_on:
+      migrasi:
+        condition: service_completed_successfully
+    environment:
+      APP_NAME: Inventory Sepatu
+      APP_ENV: local
+      APP_KEY: ${APP_KEY:-base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+      APP_DEBUG: "true"
+      APP_URL: http://pencatatan.localhost
+      SERVICE_ROLE: pencatatan
+      DB_CONNECTION: pgsql
+      DB_URL: ${DB_URL}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSLMODE: ${DB_SSLMODE:-require}
+      LOG_CHANNEL: stderr
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pencatatan.rule=Host(`pencatatan.localhost`)
+      - traefik.http.routers.pencatatan.entrypoints=web
+      - traefik.http.services.pencatatan.loadbalancer.server.port=8000
+    networks:
+      - inventory
+
+  cetak-laporan:
+    build: .
+    depends_on:
+      migrasi:
+        condition: service_completed_successfully
+    environment:
+      APP_NAME: Inventory Sepatu
+      APP_ENV: local
+      APP_KEY: ${APP_KEY:-base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+      APP_DEBUG: "true"
+      APP_URL: http://laporan.localhost
+      SERVICE_ROLE: cetak-laporan
+      DB_CONNECTION: pgsql
+      DB_URL: ${DB_URL}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSLMODE: ${DB_SSLMODE:-require}
+      LOG_CHANNEL: stderr
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.laporan.rule=Host(`laporan.localhost`)
+      - traefik.http.routers.laporan.entrypoints=web
+      - traefik.http.services.laporan.loadbalancer.server.port=8000
+    networks:
+      - inventory
+
+  notif-komunikasi:
+    build: .
+    depends_on:
+      migrasi:
+        condition: service_completed_successfully
+    environment:
+      APP_NAME: Inventory Sepatu
+      APP_ENV: local
+      APP_KEY: ${APP_KEY:-base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+      APP_DEBUG: "true"
+      APP_URL: http://komunikasi.localhost
+      SERVICE_ROLE: notif-komunikasi
+      DB_CONNECTION: pgsql
+      DB_URL: ${DB_URL}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSLMODE: ${DB_SSLMODE:-require}
+      LOG_CHANNEL: stderr
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.komunikasi.rule=Host(`komunikasi.localhost`)
+      - traefik.http.routers.komunikasi.entrypoints=web
+      - traefik.http.services.komunikasi.loadbalancer.server.port=8000
+    networks:
+      - inventory
+
+  migrasi:
+    build: .
+    command: ["php", "artisan", "migrate", "--force"]
+    restart: "no"
+    environment:
+      APP_NAME: Inventory Sepatu
+      APP_ENV: local
+      APP_KEY: ${APP_KEY:-base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+      APP_DEBUG: "true"
+      APP_URL: http://pencatatan.localhost
+      SERVICE_ROLE: migrasi
+      DB_CONNECTION: pgsql
+      DB_URL: ${DB_URL}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSLMODE: ${DB_SSLMODE:-require}
+      LOG_CHANNEL: stderr
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+    networks:
+      - inventory
+
+networks:
+  inventory:
+    driver: bridge
