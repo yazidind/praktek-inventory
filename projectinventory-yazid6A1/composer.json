@@ -5,6 +5,7 @@
   "require": {
     "php": "^8.3",
     "laravel/framework": "^11.0",
+    "laravel/socialite": "^5.16",
     "laravel/tinker": "^2.9"
   },
   "require-dev": {
@@ -44,6 +45,9 @@
     }
   },
   "config": {
+    "audit": {
+      "block-insecure": false
+    },
     "optimize-autoloader": true,
     "preferred-install": "dist",
     "sort-packages": true,

@@ -12,12 +12,18 @@
             <p class="eyebrow">Inventory Sepatu</p>
             <h1>@yield('title', 'Dashboard')</h1>
         </div>
-        <nav>
-            <a href="{{ route('dashboard') }}">Dashboard</a>
-            <a href="{{ route('inventory.index') }}">Pencatatan</a>
-            <a href="{{ route('reports.index') }}">Cetak Laporan</a>
-            <a href="{{ route('communications.index') }}">Notif & Komunikasi</a>
-        </nav>
+        @auth
+            <nav>
+                <a href="{{ route('dashboard') }}">Dashboard</a>
+                <a href="{{ route('inventory.index') }}">Pencatatan</a>
+                <a href="{{ route('reports.index') }}">Cetak Laporan</a>
+                <a href="{{ route('communications.index') }}">Notif & Komunikasi</a>
+                <form class="logout-form" method="post" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">Logout</button>
+                </form>
+            </nav>
+        @endauth
     </header>
 
     <main class="container">

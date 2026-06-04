@@ -44,6 +44,10 @@ nav {
     gap: 12px;
 }
 
+nav .logout-form {
+    margin: 0;
+}
+
 nav a {
     border: 1px solid #cfd7df;
     border-radius: 6px;
@@ -190,6 +194,31 @@ button,
     padding: 9px 14px;
 }
 
+.auth-panel {
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #dde3ea;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 56px auto 0;
+    max-width: 720px;
+    padding: 28px;
+}
+
+.auth-panel h2 {
+    font-size: 24px;
+    margin: 4px 0 8px;
+}
+
+.auth-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+}
+
 .inline-form {
     display: grid;
     gap: 8px;
@@ -224,8 +253,14 @@ button,
 
     .stats,
     .panel-grid,
-    .form-grid {
+    .form-grid,
+    .auth-panel {
         grid-template-columns: 1fr;
+    }
+
+    .auth-panel {
+        align-items: stretch;
+        flex-direction: column;
     }
 
     .inline-form {

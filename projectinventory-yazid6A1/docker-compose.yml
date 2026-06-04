@@ -28,7 +28,7 @@ services:
       APP_ENV: local
       APP_KEY: ${APP_KEY:-base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
       APP_DEBUG: "true"
-      APP_URL: http://pencatatan.localhost
+      APP_URL: ${APP_URL:-http://pencatatan.localhost}
       SERVICE_ROLE: pencatatan
       DB_CONNECTION: pgsql
       DB_URL: ${DB_URL}
@@ -41,11 +41,17 @@ services:
       LOG_CHANNEL: stderr
       SESSION_DRIVER: file
       CACHE_STORE: file
+      OAUTH_PROVIDER: ${OAUTH_PROVIDER:-google}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://pencatatan.localhost/auth/google/callback}
     labels:
       - traefik.enable=true
       - traefik.http.routers.pencatatan.rule=Host(`pencatatan.localhost`)
       - traefik.http.routers.pencatatan.entrypoints=web
       - traefik.http.services.pencatatan.loadbalancer.server.port=8000
+    ports:
+      - "8000:8000"
     networks:
       - inventory
 
@@ -72,6 +78,10 @@ services:
       LOG_CHANNEL: stderr
       SESSION_DRIVER: file
       CACHE_STORE: file
+      OAUTH_PROVIDER: ${OAUTH_PROVIDER:-google}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://pencatatan.localhost/auth/google/callback}
     labels:
       - traefik.enable=true
       - traefik.http.routers.laporan.rule=Host(`laporan.localhost`)
@@ -103,6 +113,10 @@ services:
       LOG_CHANNEL: stderr
       SESSION_DRIVER: file
       CACHE_STORE: file
+      OAUTH_PROVIDER: ${OAUTH_PROVIDER:-google}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://pencatatan.localhost/auth/google/callback}
     labels:
       - traefik.enable=true
       - traefik.http.routers.komunikasi.rule=Host(`komunikasi.localhost`)
@@ -133,6 +147,10 @@ services:
       LOG_CHANNEL: stderr
       SESSION_DRIVER: file
       CACHE_STORE: file
+      OAUTH_PROVIDER: ${OAUTH_PROVIDER:-google}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://pencatatan.localhost/auth/google/callback}
     networks:
       - inventory
 
